@@ -17,6 +17,30 @@ class KJevix
         {
             throw new Kohana_Exception($name. 'is not a callable jevix configurator');
         }
-        return $jevix;
+        return new KJevix($jevix);
+    }
+
+    protected $jevix;
+    public function __construct(Jevix $jevix)
+    {
+        $this->jevix = $jevix;
+    }
+    public function get_jevix()
+    {
+        return $this->jevix;
+    }
+
+    public function parse($text,&$errors){
+        $errors = null;
+
+        $text= str_replace("\n", "[n]", str_replace("\r\n", "[rn]", $text));
+        $res = $this->jevix->parse($text, $errors);
+        $res = str_replace("[n]", "\n", str_replace("[rn]", "\r\n", $res));
+
+        if ($errors)
+        {
+            throw new KJevix_Exception($text,$res,$errors);
+        }
+        return $res;
     }
 }
