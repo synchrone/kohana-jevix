@@ -1,0 +1,3 @@
+[submodule "vendor/jevix"]
+	path = vendor/jevix
+	url = git://github.com/synchrone/jevix.git
