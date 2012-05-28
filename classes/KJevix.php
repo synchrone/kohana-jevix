@@ -4,6 +4,12 @@ require Kohana::find_file('vendor', 'jevix/jevix.class');
 
 class KJevix
 {
+    /**
+     * @static
+     * @param string $name
+     * @return KJevix
+     * @throws Kohana_Exception
+     */
     public static function instance($name = 'default'){
         $jevix = new Jevix();
 
@@ -30,14 +36,14 @@ class KJevix
         return $this->jevix;
     }
 
-    public function parse($text,&$errors){
-        $errors = null;
+    public function parse($text){
+        $errors = array();
 
-        $text= str_replace("\n", "[n]", str_replace("\r\n", "[rn]", $text));
+        $text= str_replace(array('\n','\r\n'),  array('[n]','[rn]'), $text);
         $res = $this->jevix->parse($text, $errors);
-        $res = str_replace("[n]", "\n", str_replace("[rn]", "\r\n", $res));
+        $res = str_replace(array('[n]','[rn]'), array('\n','\r\n'),  $res);
 
-        if ($errors)
+        if(!empty($errors))
         {
             throw new KJevix_Exception($text,$res,$errors);
         }
